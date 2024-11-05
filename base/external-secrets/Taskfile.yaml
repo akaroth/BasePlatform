@@ -1,0 +1,13 @@
+version: '3'
+
+tasks:
+  install-external-secrets-operator:
+    desc: "Install External Secrets Operator using Helm"
+    cmds:
+      - helm repo add external-secrets https://charts.external-secrets.io
+      - helm repo update
+      - helm install external-secrets external-secrets/external-secrets \
+          --namespace external-secrets \
+          --create-namespace \
+          --set installCRDs=true
+    silent: true
