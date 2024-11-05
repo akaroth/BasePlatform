@@ -4,21 +4,22 @@ kind: Kustomization
 
 resources:
   - ../../base/kube-prometheus
+  - ../../base/external-secrets
 
-patches:
-  - target:
-      kind: Prometheus
-      name: prometheus
-      namespace: monitoring
-    patch: |-
-      apiVersion: monitoring.coreos.com/v1
-      kind: Prometheus
-      metadata:
-        name: prometheus
-        namespace: monitoring
-      spec:
-        thanos:
-          create: true
-          objectStorageConfig:
-            secretName: thanos-objectstore-secret
-            key: config.yaml
+# patches:
+#   - target:
+#       kind: Prometheus
+#       name: prometheus
+#       namespace: monitoring
+#     patch: |-
+#       apiVersion: monitoring.coreos.com/v1
+#       kind: Prometheus
+#       metadata:
+#         name: prometheus
+#         namespace: monitoring
+#       spec:
+#         thanos:
+#           create: true
+#           objectStorageConfig:
+#             secretName: thanos-objectstore-secret
+#             key: config.yaml
