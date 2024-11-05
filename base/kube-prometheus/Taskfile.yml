@@ -9,8 +9,13 @@ tasks:
       chart_version: '{{.CHART_VERSION | default "65.5.1"}}'
       namespace: '{{.NAMESPACE | default "monitoring"}}'
       output_file: '{{.OUTPUT_FILE | default "output.yaml"}}'
+      include_crds: '{{.INCLUDE_CRDS | default "true"}}'
     cmds:
       - helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
       - helm repo update
-      - helm template {{.release_name}} {{.chart_name}} --namespace {{.namespace}} --version {{.chart_version}} > {{.output_file}}
+      - |
+        helm template {{.release_name}} {{.chart_name}} \
+          --namespace {{.namespace}} \
+          --version {{.chart_version}} \
+          {{ if eq .include_crds "true" }}--include-crds{{ end }} > {{.output_file}}
     silent: true
