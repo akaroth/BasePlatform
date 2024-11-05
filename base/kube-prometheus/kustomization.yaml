@@ -22,7 +22,7 @@ patches:
       namespace: monitoring
     patch: |-
       apiVersion: monitoring.coreos.com/v1
-      kind: ServiceMonitor
+      kind: Alertmanager
       metadata:
         name: prometheus-kube-prometheus-alertmanager
         namespace: monitoring
