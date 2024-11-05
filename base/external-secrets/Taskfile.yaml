@@ -1,13 +1,21 @@
 version: '3'
 
 tasks:
-  install-external-secrets-operator:
-    desc: "Install External Secrets Operator using Helm"
+  render-external-secrets-operator:
+    desc: "Render External Secrets Operator Helm chart templates as YAML with custom variables"
+    vars:
+      release_name: '{{.RELEASE_NAME | default "external-secrets"}}'
+      chart_name: '{{.CHART_NAME | default "external-secrets/external-secrets"}}'
+      chart_version: '{{.CHART_VERSION | default "0.10.5"}}'
+      namespace: '{{.NAMESPACE | default "external-secrets"}}'
+      output_file: '{{.OUTPUT_FILE | default "external-secrets-operator.yaml"}}'
+      install_crds: '{{.INSTALL_CRDS | default "true"}}'
     cmds:
       - helm repo add external-secrets https://charts.external-secrets.io
       - helm repo update
-      - helm install external-secrets external-secrets/external-secrets \
-          --namespace external-secrets \
-          --create-namespace \
-          --set installCRDs=true
+      - |
+        helm template {{.release_name}} {{.chart_name}} \
+          --namespace {{.namespace}} \
+          --version {{.chart_version}} \
+          {{ if eq .install_crds "true" }}--set installCRDs=true{{ end }} > {{.output_file}}
     silent: true
