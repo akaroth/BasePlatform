@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: actions-runner-controller-serving-cert
+  namespace: actions-runner-system
+spec:
+  secretName: actions-runner-controller-serving-cert
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days before expiration
+  commonName: actions-runner-controller.local
+  dnsNames:
+    - actions-runner-controller.local  # Use any local DNS name or IP
+  issuerRef:
+    name: ca-issuer
+    kind: ClusterIssuer
