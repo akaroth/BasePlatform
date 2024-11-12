@@ -1,0 +1,21 @@
+version: '3'
+
+tasks:
+  render-actions-runner-controller:
+    desc: "Render Actions Runner Controller Helm chart templates as YAML with default or custom variables"
+    vars:
+      release_name: '{{.RELEASE_NAME | default "actions-runner-controller"}}'
+      chart_name: '{{.CHART_NAME | default "actions-runner-controller/actions-runner-controller"}}'
+      chart_version: '{{.CHART_VERSION | default "0.23.0"}}'
+      namespace: '{{.NAMESPACE | default "actions-runner-system"}}'
+      output_file: '{{.OUTPUT_FILE | default "actions-runner-controller.yaml"}}'
+      install_crds: '{{.INSTALL_CRDS | default "true"}}'
+    cmds:
+      - helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
+      - helm repo update
+      - |
+        helm template {{.release_name}} {{.chart_name}} \
+          --namespace {{.namespace}} \
+          --version {{.chart_version}} \
+          {{ if eq .install_crds "true" }}--set installCRDs=true{{ end }} > {{.output_file}}
+    silent: true

@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ../../base/kube-prometheus
   - ../../base/external-secrets
+  - ../../base/action-runner
 
 # patches:
 #   - target:
