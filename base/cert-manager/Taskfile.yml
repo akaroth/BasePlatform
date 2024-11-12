@@ -1,0 +1,21 @@
+version: '3'
+
+tasks:
+  render-cert-manager:
+    desc: "Render Cert-Manager Helm chart templates as YAML with default or custom variables"
+    vars:
+      release_name: '{{.RELEASE_NAME | default "cert-manager"}}'
+      chart_name: '{{.CHART_NAME | default "jetstack/cert-manager"}}'
+      chart_version: '{{.CHART_VERSION | default "v1.12.0"}}'
+      namespace: '{{.NAMESPACE | default "cert-manager"}}'
+      output_file: '{{.OUTPUT_FILE | default "cert-manager.yaml"}}'
+      install_crds: '{{.INSTALL_CRDS | default "true"}}'
+    cmds:
+      - helm repo add jetstack https://charts.jetstack.io
+      - helm repo update
+      - |
+        helm template {{.release_name}} {{.chart_name}} \
+          --namespace {{.namespace}} \
+          --version {{.chart_version}} \
+          {{ if eq .install_crds "true" }}--set installCRDs=true{{ end }} > {{.output_file}}
+    silent: true
