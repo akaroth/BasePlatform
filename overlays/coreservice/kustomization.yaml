@@ -6,7 +6,7 @@ resources:
   - ../../base/kube-prometheus
   - ../../base/external-secrets
   - ../../base/actions-runner
-  - ../../basecert-manager
+  - ../../base/cert-manager
 
 # patches:
 #   - target:
