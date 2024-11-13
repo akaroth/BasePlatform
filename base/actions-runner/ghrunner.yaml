@@ -1,14 +1,11 @@
+
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
   name: example-runner-deployment
   namespace: actions-runner-system
 spec:
-  replicas: 2  # Number of runner pods to deploy
   template:
     spec:
-      repository: akaroth/BasePlatform
-      group: "Default"
+      repository: akaroth/BasePlatform  # Replace with your GitHub organization
       labels: ["self-hosted", "kubernetes", "actions-runner-controller"]
-      image: "summerwind/actions-runner:latest"  # Ensure this field is set
-      ephemeral: true  # Optional: for ephemeral runners
