@@ -1,0 +1,16 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: HorizontalRunnerAutoscaler
+metadata:
+  name: example-runner-autoscaler
+  namespace: actions-runner-system
+spec:
+  scaleTargetRef:
+    name: actions-runner-controller  # Name of your RunnerDeployment
+  minReplicas: 0                     # Scale down to zero when no jobs
+  maxReplicas: 5                     # Maximum number of runners for parallel jobs
+  metrics:
+    - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
+      repositoryNames:
+        - akaroth/BasePlatform
+      scaleUpThreshold: "1"             # Scale up when there's 1 or more queued/in-progress job
+      scaleDownThreshold: "0"           # Scale down to zero when there are no jobs

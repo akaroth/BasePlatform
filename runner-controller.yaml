@@ -1,0 +1,24 @@
+# runner-controller.yaml
+
+githubApp:
+  enabled: true
+  appId: 976559                # Replace with your GitHub App ID
+  installationId: 54036319      # Replace with your GitHub App Installation ID
+  privateKeySecretName: controller-manager  # This is the name of the secret you created for the GitHub App
+  privateKeySecretKey: github_app_private_key  # This should match the key name in your secret for the private key
+
+# Optional configurations for resource limits, logging, and other settings:
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+replicaCount: 1  # Number of controller pods to run
+
+# Configure the default runner image and docker image if needed
+runner:
+  image: summerwind/actions-runner:latest
+  dockerImage: docker:latest

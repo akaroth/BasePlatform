@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run a Test Command
-        run: echo "This is running on a self-hosted GitHub Actions runner"
+        run: echo "Testing Runner HP"
