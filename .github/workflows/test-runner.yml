@@ -1,4 +1,4 @@
-name: Test Self-Hosted Runner
+name: Build and Run NGINX Docker Container
 
 on:
   push:
@@ -6,9 +6,12 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: self-hosted  # This targets your self-hosted runners
+  build-and-run:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Run a Test Command
-        run: echo "Testing Runner scale up"
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build and Run Docker Container
+        run: |
+          make run
