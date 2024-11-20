@@ -1,0 +1,57 @@
+# Taskfile.yml
+
+version: '3'
+
+vars:
+  VERSION_CMD: ./generate_version.sh
+  VERSION_FILE: VERSION.txt
+
+tasks:
+  default:
+    desc: Run the 'all' task
+    deps:
+      - all
+
+  generate_version:
+    desc: Generate a custom build version
+    cmds:
+      - chmod +x generate_version.sh
+      - VERSION=$($VERSION_CMD)
+      - echo $${VERSION} > ${{VERSION_FILE}}
+    outputs:
+      - ${{VERSION_FILE}}
+
+  build:
+    desc: Build the application using the generated version
+    deps:
+      - generate_version
+    cmds:
+      - VERSION=$(cat ${{VERSION_FILE}})
+      - echo "Building application version $${VERSION}"
+      # Replace the following line with your actual build command
+      - ./build.sh --version=$${VERSION}
+
+  tag:
+    desc: Tag the current commit with the generated version
+    deps:
+      - generate_version
+    cmds:
+      - VERSION=$(cat ${{VERSION_FILE}})
+      - git tag $${VERSION}
+      - git push origin $${VERSION}
+
+  release:
+    desc: Create a GitHub release with the generated version
+    deps:
+      - tag
+    cmds:
+      - VERSION=$(cat ${{VERSION_FILE}})
+      - gh release create $${VERSION} --title "Release $${VERSION}" --notes "Automated release of version $${VERSION}"
+    silent: true
+
+  all:
+    desc: Generate version, build, tag, and release
+    deps:
+      - build
+      - tag
+      - release

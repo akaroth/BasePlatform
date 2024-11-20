@@ -12,6 +12,6 @@ spec:
   metrics:
     - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
       repositoryNames:
-        - your-org/your-repo
+        - akaroth/BasePlatform
       scaleUpThreshold: "1"
       scaleDownThreshold: "0"
