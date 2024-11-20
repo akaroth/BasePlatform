@@ -1,0 +1,64 @@
+version: '3'
+
+vars:
+  VERSION_CMD: ./generate_version.sh
+  VERSION_FILE: VERSION.txt
+
+tasks:
+  default:
+    deps:
+      - all
+
+  generate_version:
+    cmds:
+      - |
+        chmod +x generate_version.sh
+        VERSION=$({{.VERSION_CMD}} 2>/dev/null)
+        if [ -z "$VERSION" ]; then
+          exit 0
+        fi
+        echo "$VERSION" > {{.VERSION_FILE}}
+
+  build:
+    deps:
+      - generate_version
+    cmds:
+      - |
+        if [ ! -f {{.VERSION_FILE}} ]; then
+          exit 0
+        fi
+        VERSION=$(cat {{.VERSION_FILE}})
+        ./build.sh --version="$VERSION"
+
+  tag:
+    deps:
+      - generate_version
+    cmds:
+      - |
+        if [ ! -f {{.VERSION_FILE}} ]; then
+          exit 0
+        fi
+        VERSION=$(cat {{.VERSION_FILE}})
+        if ! git rev-parse "$VERSION" >/dev/null 2>&1; then
+          git tag "$VERSION"
+          git push origin "$VERSION"
+        fi
+
+  release:
+    deps:
+      - tag
+    cmds:
+      - |
+        if [ ! -f {{.VERSION_FILE}} ]; then
+          exit 0
+        fi
+        VERSION=$(cat {{.VERSION_FILE}})
+        if ! git ls-remote --tags origin | grep -q "refs/tags/$VERSION"; then
+          git push origin "$VERSION"
+        fi
+        gh release create "$VERSION" --title "Release $VERSION" --notes "Automated release of version $VERSION"
+
+  all:
+    deps:
+      - build
+      - release
